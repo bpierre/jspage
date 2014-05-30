@@ -11,8 +11,19 @@ program
   .version(require('../package.json').version)
   .usage('[options] [file]')
   .option('-t, --title <title>', 'The page title')
-  .option('-b, --blank', 'Blank page (no code preview)')
-  .parse(process.argv);
+  .option('-b, --blank', 'Blank page (no code preview)');
+
+program.on('--help', function() {
+  console.log('  Examples:');
+  console.log('');
+  console.log('    $ jspage foo.js > bar.html');
+  console.log('    $ jspage < foo.js > bar.html');
+  console.log('    $ cat foo.js bar.js | jspage -b > baz.html');
+  console.log('    $ echo "alert(\'Hello World\')" | jspage > foo.html');
+  console.log('');
+});
+
+program.parse(process.argv);
 
 var options = {};
 options.title = program.title;
