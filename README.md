@@ -19,6 +19,13 @@ $ npm install --global jspage
     -V, --version        output the version number
     -t, --title <title>  The page title
     -b, --blank          Blank page (no code preview)
+
+  Examples:
+
+    $ jspage foo.js > bar.html
+    $ jspage < foo.js > bar.html
+    $ cat foo.js bar.js | jspage -b > baz.html
+    $ echo "alert('Hello World')" | jspage > foo.html
 ```
 
 ## License
