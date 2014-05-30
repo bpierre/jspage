@@ -7,8 +7,6 @@ var Promise = require('bluebird');
 var readFile = Promise.promisify(fs.readFile);
 var jspage = require('../');
 
-var NO_SCRIPT_ERR = new Error('no script provided');
-
 program
   .version(require('../package.json').version)
   .usage('[options] [file]')
@@ -37,29 +35,49 @@ programContent(program)
     process.stdout.write(content);
   })
   .catch(function(err) {
-    if (err !== NO_SCRIPT_ERR) {
-      process.stderr.write('\n  ' + err + '\n');
+    if (err.name === 'NoScriptError' && process.stdin.isTTY) {
+      programHelp(process.stderr, program);
+      return;
     }
-    programHelp(process.stderr, program);
+    process.stderr.write('\n  ' + err + '\n\n');
     process.exit(1);
   });
+
+function programContent(program) {
+  if (!process.stdin.isTTY || program.args[0] === '-') {
+    return readStdin().catch(function(err) {
+      if (err.name === 'NoContentError') throw noScriptError();
+      throw err;
+    });
+  }
+  if (program.args[0]) return readFile(program.args[0], 'utf8');
+  return Promise.reject(noScriptError());
+}
 
 function readStdin() {
   return new Promise(function(resolve, reject) {
     process.stdin.setEncoding('utf8');
     process.stdin.pipe(concat(function(data) {
-      resolve(data);
+      if (Array.isArray(data)) data = data.join('');
+      if (data) resolve(data);
+      else reject(noContentError());
     }));
   });
-}
-
-function programContent(program) {
-  if (!process.stdin.isTTY || program.args[0] === '-') return readStdin();
-  if (program.args[0]) return readFile(program.args[0], 'utf8');
-  return Promise.reject(NO_SCRIPT_ERR);
 }
 
 function programHelp(output, program) {
   output.write(program.helpInformation());
   program.emit('--help');
+}
+
+function noContentError() {
+  var err = new Error('no content provided');
+  err.name = 'NoContentError';
+  return err;
+}
+
+function noScriptError() {
+  var err = new Error('no script provided');
+  err.name = 'NoScriptError';
+  return err;
 }
