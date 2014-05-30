@@ -7,6 +7,8 @@ var Promise = require('bluebird');
 var readFile = Promise.promisify(fs.readFile);
 var jspage = require('../');
 
+var NO_SCRIPT_ERR = new Error('no script provided');
+
 program
   .version(require('../package.json').version)
   .usage('[options] [file]')
@@ -35,8 +37,10 @@ programContent(program)
     process.stdout.write(content);
   })
   .catch(function(err) {
-    process.stderr.write('\n  ' + err + '\n');
-    process.stderr.write(program.helpInformation());
+    if (err !== NO_SCRIPT_ERR) {
+      process.stderr.write('\n  ' + err + '\n');
+    }
+    programHelp(process.stderr, program);
     process.exit(1);
   });
 
@@ -52,5 +56,10 @@ function readStdin() {
 function programContent(program) {
   if (!process.stdin.isTTY || program.args[0] === '-') return readStdin();
   if (program.args[0]) return readFile(program.args[0], 'utf8');
-  return Promise.reject(new Error('no content provided'));
+  return Promise.reject(NO_SCRIPT_ERR);
+}
+
+function programHelp(output, program) {
+  output.write(program.helpInformation());
+  program.emit('--help');
 }
