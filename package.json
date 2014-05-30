@@ -1,14 +1,14 @@
 {
   "name": "jspage",
   "description": "Convert a script into an HTML page containing that script.",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "author": "Pierre Bertet <bonjour@pierrebertet.net> (http://pierrebertet.net/)",
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git://github.com/bpierre/jspage.git"
   },
-  "bin" : {
+  "bin": {
     "jspage": "./bin/jspage"
   },
   "main": "index.js",
