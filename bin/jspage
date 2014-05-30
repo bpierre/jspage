@@ -1,0 +1,45 @@
+#!/usr/bin/env node
+
+var fs = require('fs');
+var program = require('commander');
+var concat = require('concat-stream');
+var Promise = require('bluebird');
+var readFile = Promise.promisify(fs.readFile);
+var jspage = require('../');
+
+program
+  .version(require('../package.json').version)
+  .usage('[options] [file]')
+  .option('-t, --title <title>', 'The page title')
+  .option('-b, --blank', 'Blank page (no code preview)')
+  .parse(process.argv);
+
+var options = {};
+options.title = program.title;
+options.blank = program.blank;
+
+programContent(program)
+  .then(jspage(options))
+  .then(function(content) {
+    process.stdout.write(content);
+  })
+  .catch(function(err) {
+    process.stderr.write('\n  ' + err + '\n');
+    process.stderr.write(program.helpInformation());
+    process.exit(1);
+  });
+
+function readStdin() {
+  return new Promise(function(resolve, reject) {
+    process.stdin.setEncoding('utf8');
+    process.stdin.pipe(concat(function(data) {
+      resolve(data);
+    }));
+  });
+}
+
+function programContent(program) {
+  if (!process.stdin.isTTY || program.args[0] === '-') return readStdin();
+  if (program.args[0]) return readFile(program.args[0], 'utf8');
+  return Promise.reject(new Error('no content provided'));
+}

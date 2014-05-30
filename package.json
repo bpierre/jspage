@@ -1,0 +1,22 @@
+{
+  "name": "jspage",
+  "description": "Convert a script into an HTML page containing that script.",
+  "version": "0.0.1",
+  "author": "Pierre Bertet <bonjour@pierrebertet.net> (http://pierrebertet.net/)",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/bpierre/jspage.git"
+  },
+  "bin" : {
+    "jspage": "./bin/jspage"
+  },
+  "main": "index.js",
+  "scripts": {},
+  "dependencies": {
+    "bluebird": "^1.2.4",
+    "commander": "^2.2.0",
+    "concat-stream": "^1.4.5"
+  },
+  "devDependencies": {}
+}
