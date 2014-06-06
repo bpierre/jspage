@@ -2,6 +2,8 @@
 
 Convert a script into an HTML page containing that script.
 
+<p align="center"><img width="277" height="268" alt="jspage illustration" src="http://scri.ch/n1k.png"></p>
+
 ## Installation
 
 ```
@@ -31,3 +33,7 @@ $ npm install --global jspage
 ## License
 
 [MIT](http://pierre.mit-license.org/)
+
+## Special thanks
+
+Illustration made by [Raphaël Bastide](http://raphaelbastide.com/) with [scri.ch](http://scri.ch/).
