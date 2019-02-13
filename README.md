@@ -2,7 +2,7 @@
 
 Convert a script into an HTML page containing that script.
 
-<p align="center"><img width="277" height="268" alt="jspage illustration" src="http://scri.ch/n1k.png"></p>
+<p align="center"><img width="277" height="268" alt="jspage illustration" src="http://scri.ch/n1k-2x.png"></p>
 
 ## Installation
 
